@@ -72,7 +72,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_write_iops" {
 
 resource "aws_cloudwatch_metric_alarm" "volume_bytes_used" {
   count                     = var.create_volume_bytes_used_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_vvolume_bytes_used"
+  alarm_name                = "${var.db_instance_id}_volume_bytes_used"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeBytesUsedEvaluationPeriods"]
   metric_name               = "VolumeBytesUsed"
