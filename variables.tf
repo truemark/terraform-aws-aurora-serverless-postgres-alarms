@@ -5,7 +5,7 @@ variable "backup_retention_period_storage_used_evaluation_periods" {
 }
 
 variable "backup_retention_period_storage_used_threshold" {
-  description = "The value of read iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
@@ -58,7 +58,7 @@ variable "serverless_database_capacity_evaluation_periods" {
 }
 
 variable "serverless_database_capacity_threshold" {
-  description = "The value of read iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
@@ -80,7 +80,7 @@ variable "total_backup_storage_billed_evaluation_periods" {
 }
 
 variable "total_backup_storage_billed_threshold" {
-  description = "The value of read iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
@@ -92,7 +92,7 @@ variable "volume_bytes_used_evaluation_periods" {
 }
 
 variable "volume_bytes_used_threshold" {
-  description = "The value of read iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
@@ -104,7 +104,7 @@ variable "volume_read_iops_evaluation_periods" {
 }
 
 variable "volume_read_iops_threshold" {
-  description = "The value of read iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
@@ -116,7 +116,7 @@ variable "volume_write_iops_evaluation_periods" {
 }
 
 variable "volume_write_iops_threshold" {
-  description = "The value of write iops that will trigger an alert."
+  description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
