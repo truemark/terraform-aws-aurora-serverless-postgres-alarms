@@ -9,10 +9,10 @@ locals {
 
 #------------------------------------------------------------------------------
 # Generate an rds instance event sub that publishes to the sns topic.
-resource "aws_db_event_subscription" "instance_sub" {
-  name        = "${var.db_instance_id}-instances"
+resource "aws_db_event_subscription" "cluster_sub" {
+  name        = var.db_instance_id
   sns_topic   = data.aws_sns_topic.topic.arn
-  source_type = "db-instance"
+  source_type = "db-cluster"
   source_ids  = [var.db_instance_id]
   tags        = var.tags
 
