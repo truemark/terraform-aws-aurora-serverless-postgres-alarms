@@ -23,8 +23,7 @@ resource "aws_db_event_subscription" "cluster_sub" {
     "failure",
     "global-failover",
     "maintenance",
-    "notification",
-    "restoration"
+    "notification"
   ]
 
 }
