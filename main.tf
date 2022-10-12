@@ -3,6 +3,10 @@ data "aws_sns_topic" "topic" {
   name = var.sns_topic_name
 }
 
+locals {
+  cloudwatch_namespace = "AWS/RDS"
+}
+
 #------------------------------------------------------------------------------
 # Generate an rds instance event sub that publishes to the sns topic.
 resource "aws_db_event_subscription" "instance_sub" {
@@ -34,7 +38,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_read_iops" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeReadIOPsEvaluationPeriods"]
   metric_name               = "VolumeReadIOPs"
-  namespace                 = "AWS/RDS"
+  namespace                 = local.cloudwatch_namespace
   period                    = "60"
   statistic                 = "Average"
   threshold                 = local.thresholds["VolumeReadIOPsThreshold"]
@@ -55,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_write_iops" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeWriteIOPsEvaluationPeriods"]
   metric_name               = "VolumeWriteIOPs"
-  namespace                 = "AWS/RDS"
+  namespace                 = local.cloudwatch_namespace
   period                    = "60"
   statistic                 = "Average"
   threshold                 = local.thresholds["VolumeWriteIOPsThreshold"]
@@ -76,7 +80,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_bytes_used" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeBytesUsedEvaluationPeriods"]
   metric_name               = "VolumeBytesUsed"
-  namespace                 = "AWS/RDS"
+  namespace                 = local.cloudwatch_namespace
   period                    = "60"
   statistic                 = "Average"
   threshold                 = local.thresholds["VolumeBytesUsedThreshold"]
@@ -98,7 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "backup_retention_period_storage_used" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["BackupRetentionPeriodStorageUsedEvaluationPeriods"]
   metric_name               = "BackupRetentionPeriodStorageUsed"
-  namespace                 = "AWS/RDS"
+  namespace                 = local.cloudwatch_namespace
   period                    = "60"
   statistic                 = "Average"
   threshold                 = local.thresholds["BackupRetentionPeriodStorageUsedThreshold"]
@@ -119,7 +123,7 @@ resource "aws_cloudwatch_metric_alarm" "total_backup_storage_billed" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["BackupRetentionPeriodStorageUsedEvaluationPeriods"]
   metric_name               = "TotalBackupStorageBilled"
-  namespace                 = "AWS/RDS"
+  namespace                 = local.cloudwatch_namespace
   period                    = "60"
   statistic                 = "Average"
   threshold                 = local.thresholds["BackupRetentionPeriodStorageUsedThreshold"]
