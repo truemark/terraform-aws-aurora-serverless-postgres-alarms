@@ -3,19 +3,47 @@ data "aws_sns_topic" "topic" {
   name = var.sns_topic_name
 }
 
+data "aws_rds_cluster" "cluster" {
+  cluster_identifier = var.cluster_identifier
+}
+
 locals {
   cloudwatch_namespace = "AWS/RDS"
 }
 
 #------------------------------------------------------------------------------
 # Generate an rds instance event sub that publishes to the sns topic.
+resource "aws_db_event_subscription" "instance_sub" {
+  name        = "${data.aws_rds_cluster.cluster.cluster_identifier}-instances"
+  sns_topic   = data.aws_sns_topic.topic.arn
+  source_type = "db-instance"
+  source_ids  = data.aws_rds_cluster.cluster.cluster_members
+  tags        = var.tags
+  event_categories = [
+    "availability",
+    "backtrack",
+    "configuration change",
+    "deletion",
+    "failover",
+    "failure",
+    "low storage",
+    "maintenance",
+    "notification",
+    "read replica",
+    "recovery",
+    "restoration",
+    "security",
+    "security patching"
+  ]
+}
+
+# Generate an rds cluster event sub that publishes to the sns topic.
 resource "aws_db_event_subscription" "cluster_sub" {
-  name        = var.db_instance_id
+  name        = "${data.aws_rds_cluster.cluster.cluster_identifier}-cluster"
   sns_topic   = data.aws_sns_topic.topic.arn
   source_type = "db-cluster"
-  source_ids  = [var.db_instance_id]
+  source_ids  = [data.aws_rds_cluster.cluster.cluster_identifier]
   tags        = var.tags
-
   event_categories = [
     "configuration change",
     "deletion",
@@ -23,17 +51,18 @@ resource "aws_db_event_subscription" "cluster_sub" {
     "failure",
     "global-failover",
     "maintenance",
-    "notification"
+    "migration",
+    "notification",
+    "serverless"
   ]
-
 }
 
 #------------------------------------------------------------------------------
-# The code below defines alarms based upon Cloudwatch metrics.
-
+# The code below defines instance alarms based upon Cloudwatch metrics.
 resource "aws_cloudwatch_metric_alarm" "volume_read_iops" {
-  count                     = var.create_volume_read_iops_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_volume_read_iops"
+  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name                = "${each.key}_volume_read_iops"
+  actions_enabled           = var.actions_enabled
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeReadIOPsEvaluationPeriods"]
   metric_name               = "VolumeReadIOPs"
@@ -48,13 +77,14 @@ resource "aws_cloudwatch_metric_alarm" "volume_read_iops" {
   treat_missing_data        = "breaching"
   tags                      = var.tags
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_write_iops" {
-  count                     = var.create_volume_write_iops_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_volume_write_iops"
+  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name                = "${each.key}_volume_write_iops"
+  actions_enabled           = var.actions_enabled
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeWriteIOPsEvaluationPeriods"]
   metric_name               = "VolumeWriteIOPs"
@@ -69,13 +99,14 @@ resource "aws_cloudwatch_metric_alarm" "volume_write_iops" {
   treat_missing_data        = "breaching"
   tags                      = var.tags
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "volume_bytes_used" {
-  count                     = var.create_volume_bytes_used_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_volume_bytes_used"
+  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name                = "${each.key}_volume_bytes_used"
+  actions_enabled           = var.actions_enabled
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["VolumeBytesUsedEvaluationPeriods"]
   metric_name               = "VolumeBytesUsed"
@@ -90,14 +121,15 @@ resource "aws_cloudwatch_metric_alarm" "volume_bytes_used" {
   treat_missing_data        = "breaching"
   tags                      = var.tags
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }
 
 
 resource "aws_cloudwatch_metric_alarm" "backup_retention_period_storage_used" {
-  count                     = var.create_backup_retention_period_storage_used_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_backup_retention_period_storage_used"
+  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name                = "${each.key}_backup_retention_period_storage_used"
+  actions_enabled           = var.actions_enabled
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["BackupRetentionPeriodStorageUsedEvaluationPeriods"]
   metric_name               = "BackupRetentionPeriodStorageUsed"
@@ -112,13 +144,14 @@ resource "aws_cloudwatch_metric_alarm" "backup_retention_period_storage_used" {
   treat_missing_data        = "breaching"
   tags                      = var.tags
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "total_backup_storage_billed" {
-  count                     = var.create_total_backup_storage_billed_alarm ? 1 : 0
-  alarm_name                = "${var.db_instance_id}_total_backup_storage_billed"
+  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name                = "${each.key}_total_backup_storage_billed"
+  actions_enabled           = var.actions_enabled
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = local.thresholds["BackupRetentionPeriodStorageUsedEvaluationPeriods"]
   metric_name               = "TotalBackupStorageBilled"
@@ -133,13 +166,14 @@ resource "aws_cloudwatch_metric_alarm" "total_backup_storage_billed" {
   tags                      = var.tags
   treat_missing_data        = "breaching"
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "serverless_database_capacity" {
-  count               = var.create_serverless_database_capacity_alarm ? 1 : 0
-  alarm_name          = "${var.db_instance_id}_serverless_database_capacity_high"
+  for_each            = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
+  alarm_name          = "${each.key}_serverless_database_capacity_high"
+  actions_enabled     = var.actions_enabled
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = local.thresholds["ServerlessDatabaseCapacityEvaluationPeriods"]
   metric_name         = "ServerlessDatabaseCapacity"
@@ -152,6 +186,6 @@ resource "aws_cloudwatch_metric_alarm" "serverless_database_capacity" {
   ok_actions          = [data.aws_sns_topic.topic.arn]
   tags                = var.tags
   dimensions = {
-    DBInstanceIdentifier = var.db_instance_id
+    DBInstanceIdentifier = each.key
   }
 }

@@ -1,3 +1,9 @@
+variable "actions_enabled" {
+  description = "Toggle to enable or disable alarm actions (notifications)."
+  type        = bool
+  default     = true
+}
+
 variable "backup_retention_period_storage_used_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
@@ -10,45 +16,10 @@ variable "backup_retention_period_storage_used_threshold" {
   default     = 10000
 }
 
-variable "create_backup_retention_period_storage_used_alarm" {
-  description = "Toggle to create backup_retention_period_storage_used serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_serverless_database_capacity_alarm" {
-  description = "Toggle to create serverless_database_capacity serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_total_backup_storage_billed_alarm" {
-  description = "Toggle to create total_backup_storage_billed serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_volume_bytes_used_alarm" {
-  description = "Toggle to create volume_bytes_used serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_volume_read_iops_alarm" {
-  description = "Toggle to create volume_read_iops serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "create_volume_write_iops_alarm" {
-  description = "Toggle to create volume_write_iops serverless alarm."
-  type        = bool
-  default     = true
-}
-
-variable "db_instance_id" {
-  description = "Name of the serverless instance to monitor."
+variable "cluster_identifier" {
+  description = "The name of the cluster to monitor."
   type        = string
+  nullable    = false
 }
 
 variable "serverless_database_capacity_evaluation_periods" {
