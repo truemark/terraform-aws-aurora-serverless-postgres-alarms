@@ -22,6 +22,30 @@ variable "cluster_identifier" {
   nullable    = false
 }
 
+variable "cluster_cpu_utilization_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "cluster_cpu_utilization_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 90
+}
+
+variable "cluster_freeable_memory_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "cluster_freeable_memory_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 1000000000
+}
+
 variable "serverless_database_capacity_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
@@ -90,4 +114,64 @@ variable "volume_write_iops_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
+}
+
+variable "replication_lag_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "replication_lag_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 100
+}
+
+variable "acu_utilization_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "acu_utilization_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 90
+}
+
+variable "database_connections_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "database_connections_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 2000
+}
+
+variable "instance_freeable_memory_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "instance_freeable_memory_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 1000000000
+}
+
+variable "instance_temp_storage_iops_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "instance_temp_storage_iops_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 1000000000
 }
