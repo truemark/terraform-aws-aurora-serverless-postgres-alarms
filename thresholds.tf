@@ -32,7 +32,7 @@ locals {
     ServerlessDatabaseCapacityThreshold               = min(max(var.serverless_database_capacity_threshold, 0), 100000000)
     TotalBackupStorageBilledEvaluationPeriods         = min(max(var.total_backup_storage_billed_evaluation_periods, 1), 100)
     TotalBackupStorageBilledThreshold                 = max(var.total_backup_storage_billed_threshold, 0)
-    InstanceVolumeBytesUsedEvaluationPeriods          = min(max(var.instance_volume_bytes_used_evaluation_periods, 1), 100)
-    InstanceVolumeBytesUsedThreshold                  = max(var.instance_volume_bytes_used_threshold, 0)
+    ClusterVolumeBytesUsedEvaluationPeriods           = min(max(var.cluster_volume_bytes_used_evaluation_periods, 1), 100)
+    ClusterVolumeBytesUsedThreshold                   = max(var.cluster_volume_bytes_used_threshold, 0)
   }
 }

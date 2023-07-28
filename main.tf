@@ -142,6 +142,27 @@ resource "aws_cloudwatch_metric_alarm" "cluster_volume_write_iops" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "cluster_volume_bytes_used" {
+  alarm_name                = "${var.cluster_identifier}-instance-volume-bytes-used"
+  actions_enabled           = var.actions_enabled
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = local.thresholds["ClusterVolumeBytesUsedEvaluationPeriods"]
+  metric_name               = "VolumeBytesUsed"
+  namespace                 = local.cloudwatch_namespace
+  period                    = "60"
+  statistic                 = "Average"
+  threshold                 = local.thresholds["ClusterVolumeBytesUsedThreshold"]
+  alarm_description         = "Instance volume bytes used exceeded threshold."
+  alarm_actions             = [data.aws_sns_topic.topic.arn]
+  ok_actions                = [data.aws_sns_topic.topic.arn]
+  insufficient_data_actions = [data.aws_sns_topic.topic.arn]
+  treat_missing_data        = "breaching"
+  tags                      = var.tags
+  dimensions = {
+    DBClusterIdentifier = var.cluster_identifier
+  }
+}
+
 #------------------------------------------------------------------------------
 # The code below defines instance alarms based upon Cloudwatch metrics.
 resource "aws_cloudwatch_metric_alarm" "instance_volume_read_iops" {
@@ -188,27 +209,7 @@ resource "aws_cloudwatch_metric_alarm" "volume_write_iops" {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "instance_volume_bytes_used" {
-  for_each                  = { for key, value in data.aws_rds_cluster.cluster.cluster_members : key => value }
-  alarm_name                = "${each.key}-instance-volume-bytes-used"
-  actions_enabled           = var.actions_enabled
-  comparison_operator       = "GreaterThanThreshold"
-  evaluation_periods        = local.thresholds["InstanceVolumeBytesUsedEvaluationPeriods"]
-  metric_name               = "VolumeBytesUsed"
-  namespace                 = local.cloudwatch_namespace
-  period                    = "60"
-  statistic                 = "Average"
-  threshold                 = local.thresholds["InstanceVolumeBytesUsedThreshold"]
-  alarm_description         = "Instance volume bytes used exceeded threshold."
-  alarm_actions             = [data.aws_sns_topic.topic.arn]
-  ok_actions                = [data.aws_sns_topic.topic.arn]
-  insufficient_data_actions = [data.aws_sns_topic.topic.arn]
-  treat_missing_data        = "breaching"
-  tags                      = var.tags
-  dimensions = {
-    DBInstanceIdentifier = each.key
-  }
-}
+
 
 
 resource "aws_cloudwatch_metric_alarm" "backup_retention_period_storage_used" {

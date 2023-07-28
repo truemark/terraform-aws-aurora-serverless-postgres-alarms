@@ -80,19 +80,19 @@ variable "total_backup_storage_billed_threshold" {
   default     = 10000
 }
 
-variable "instance_volume_bytes_used_evaluation_periods" {
+variable "cluster_volume_bytes_used_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
 }
 
-variable "instance_volume_bytes_used_threshold" {
+variable "cluster_volume_bytes_used_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
 
-variable "instance_volume_read_iops_evaluation_periods" {
+variable "cluster_volume_read_iops_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
@@ -200,11 +200,6 @@ variable "connection_attempts_threshold" {
   default     = 20
 }
 
-variable "cluster_volume_read_iops_evaluation_periods" {
-  description = "The number of periods threshold must be breached to alarm."
-  type        = number
-  default     = 5
-}
 
 variable "cluster_volume_read_iops_threshold" {
   description = "The threshold value that will trigger an alert."
@@ -223,3 +218,10 @@ variable "cluster_volume_write_iops_threshold" {
   type        = number
   default     = 10000
 }
+
+variable "instance_volume_read_iops_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
