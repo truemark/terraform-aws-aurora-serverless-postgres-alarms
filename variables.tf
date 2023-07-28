@@ -89,28 +89,28 @@ variable "cluster_volume_bytes_used_evaluation_periods" {
 variable "cluster_volume_bytes_used_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
-  default     = 10000
+  default     = 10000000
 }
 
-variable "cluster_volume_read_iops_evaluation_periods" {
+variable "instance_read_iops_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
 }
 
-variable "instance_volume_read_iops_threshold" {
+variable "instance_read_iops_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
 }
 
-variable "instance_volume_write_iops_evaluation_periods" {
+variable "instance_write_iops_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
 }
 
-variable "instance_volume_write_iops_threshold" {
+variable "instance_write_iops_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
   default     = 10000
@@ -161,7 +161,7 @@ variable "instance_freeable_memory_evaluation_periods" {
 variable "instance_freeable_memory_threshold" {
   description = "The threshold value that will trigger an alert."
   type        = number
-  default     = 1000000000
+  default     = 2000000000000
 }
 
 variable "instance_temp_storage_iops_evaluation_periods" {
@@ -219,9 +219,20 @@ variable "cluster_volume_write_iops_threshold" {
   default     = 10000
 }
 
-variable "instance_volume_read_iops_evaluation_periods" {
+variable "cluster_volume_read_iops_evaluation_periods" {
   description = "The number of periods threshold must be breached to alarm."
   type        = number
   default     = 5
 }
 
+variable "cluster_temp_storage_iops_evaluation_periods" {
+  description = "The number of periods threshold must be breached to alarm."
+  type        = number
+  default     = 5
+}
+
+variable "cluster_temp_storage_iops_threshold" {
+  description = "The threshold value that will trigger an alert."
+  type        = number
+  default     = 1000000000
+}
