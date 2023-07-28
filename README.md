@@ -22,6 +22,4 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v
 
 ConnectionAttempts
 Deadlocks - how to monitor for a large jump in the number of deadlocks?
-DiskQueueDepth
-FreeLocalStorage
 
